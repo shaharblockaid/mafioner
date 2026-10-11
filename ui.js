@@ -3,7 +3,7 @@ import * as G from './logic.js';
 const app = document.getElementById('app');
 const LETTERS = ['א', 'ב', 'ג', 'ד'];
 const ICON = { win: '✅', lose: '❌', jail: '🔒' };
-const STAT = { respect: ['כבוד', 1], cash: ['כסף', 1], heat: ['חום', -1] }; // [label, +1 if going up is good]
+const STAT = { respect: ['כבוד', 1], cash: ['כסף', 1], heat: ['סכנה', -1] }; // [label, +1 if going up is good]
 
 let s = null; // game state (logic.js)
 let ui = {};  // what's on screen
@@ -112,7 +112,7 @@ function gameView() {
   const rank = G.RANKS[G.rankOf(s.respect)][1];
   return `<header class="card topbar">
       <div class="who-bar">${ring(s.respect, 44)}<div><b>${esc(s.name)}</b><small>${rank} · גיל ${s.age}</small></div></div>
-      <div class="cash-bar"><div><b>${money(s.cash)}</b><small>🔥 חום ${s.heat}</small></div><button class="x" data-act="quit" aria-label="יציאה">✕</button></div>
+      <div class="cash-bar"><div><b>${money(s.cash)}</b><small>🔥 סכנה ${s.heat}</small></div><button class="x" data-act="quit" aria-label="יציאה">✕</button></div>
     </header>
     <div class="board">
       <section class="card panel">${{ dilemma: dilemmaView, roll: rollView, report: reportView }[ui.view]()}</section>
@@ -123,10 +123,10 @@ function gameView() {
 function dilemmaView() {
   const e = ui.event;
   return `<div class="kicker"><span>${e.jail ? 'בית המעצר' : 'דילמה'}</span><hr></div>
-    ${ui.raid ? '<div class="alert">🚨 החום הגיע ל-100. פשיטה בשש בבוקר.</div>' : ''}
+    ${ui.raid ? '<div class="alert">🚨 הסכנה הגיעה ל-100. פשיטה בשש בבוקר.</div>' : ''}
     <h2>${t(e.title.replace('{n}', years(s.pending)))}</h2>
     <p class="sub">${t(e.sub)}</p>
-    ${s.heat && !e.jail ? `<p class="heat-note">🔥 חום ${s.heat}: כל הימור קשה יותר ב-${Math.round(s.heat / 3)}%</p>` : ''}
+    ${s.heat && !e.jail ? `<p class="heat-note">🔥 סכנה ${s.heat}: כל הימור קשה יותר ב-${Math.round(s.heat / 3)}%</p>` : ''}
     <div class="options">${e.options.map(optionView).join('')}</div>`;
 }
 
@@ -173,7 +173,7 @@ function reportView() {
     <div class="tiles">
       <div class="tile"><small>כבוד</small><b>${s.respect}</b>${delta(s.respect - b.respect)}</div>
       <div class="tile"><small>כסף</small><b class="${s.cash < 0 ? 'bad' : 'good'}">${money(s.cash)}</b>${delta(s.cash - b.cash, 1, money)}</div>
-      <div class="tile"><small>חום</small><b>${s.heat}</b>${delta(s.heat - b.heat, -1)}</div>
+      <div class="tile"><small>סכנה</small><b>${s.heat}</b>${delta(s.heat - b.heat, -1)}</div>
       <div class="tile"><small>${r.income ? 'הכנסה' : 'שנים בכלא'}</small><b>${r.income ? money(r.income) : s.jailYears}</b><small>${r.income ? 'לשנתיים' : 'סה״כ'}</small></div>
     </div>
     ${ra !== rb ? `<div class="rankup ${ra > rb ? '' : 'down'}">${ra > rb ? '🎖️ עלית בדרגה' : '⬇️ ירדת בדרגה'}: <b>${G.RANKS[ra][1]}</b></div>` : ''}
@@ -187,7 +187,7 @@ function sideView() {
     <div class="stats">
       <div class="stat"><small>הכנסה</small><b>${money(G.INCOME[rk])}</b><small>לשנה</small></div>
       <div class="stat"><small>מזומן</small><b class="${s.cash < 0 ? 'bad' : 'good'}">${money(s.cash)}</b></div>
-      <div class="stat"><small>חום</small><b>${s.heat}</b><div class="meter"><i style="width:${s.heat}%"></i></div></div>
+      <div class="stat"><small>סכנה</small><b>${s.heat}</b><div class="meter"><i style="width:${s.heat}%"></i></div></div>
       <div class="stat"><small>שנים בכלא</small><b>${s.jailYears}</b></div>
     </div>
     <h3>הקריירה עד עכשיו</h3>
@@ -223,7 +223,7 @@ function introSheet() {
   return `<h3>ארבעה דברים שכדאי לדעת</h3>
     <ul class="legend">
       <li><i style="background:var(--brand)"></i><b>כבוד:</b> הציון שלך ברחוב. ב-100 ${t('{אתה|את}')} סנדק. ב-0 אף אחד לא עונה לך לטלפון.</li>
-      <li><i style="background:var(--amber)"></i><b>חום:</b> כמה המשטרה מסתכלת עליך. כל נקודה מקשה על ההימורים, וב-100 יש פשיטה.</li>
+      <li><i style="background:var(--amber)"></i><b>סכנה:</b> כמה המשטרה מסתכלת עליך. כל נקודה מקשה על ההימורים, וב-100 יש פשיטה.</li>
       <li><i style="background:var(--green)"></i><b>כסף:</b> הכנסה קבועה לפי הדרגה, ועוד מה שתרוויח${t('{|י}')} בהימורים.</li>
       <li><i style="background:var(--ink)"></i><b>כלא:</b> חלק מההימורים נגמרים בגזר דין 🔒. השנים רצות, ובגיל 60 המשחק נגמר.</li>
     </ul>
