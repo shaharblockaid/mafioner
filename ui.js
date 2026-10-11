@@ -261,9 +261,12 @@ function nextRound() {
 function animateRoll() {
   const fast = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const $ = id => document.getElementById(id) || {}; // player may have quit mid-spin
-  const turn = `rotate(${-90 + ui.res.roll * 1.8}deg)`;
-  requestAnimationFrame(() => requestAnimationFrame(() => { ($('needle').style || {}).transform = turn; }));
-  setTimeout(() => { $('verdict').hidden = $('cont').hidden = false; }, fast ? 100 : 1700);
+  const target = -90 + ui.res.roll * 1.8;
+  // swing across the whole dial, then wobble in on the result
+  const angles = [-90, 90, target - 70, target + 40, target - 18, target + 6, target].map(a => Math.max(-90, Math.min(90, a)));
+  $('needle').animate?.(angles.map(a => ({ transform: `rotate(${a}deg)`, easing: 'ease-in-out' })),
+    { duration: fast ? 0 : 2600, fill: 'forwards' });
+  setTimeout(() => { $('verdict').hidden = $('cont').hidden = false; }, fast ? 100 : 2700);
 }
 
 function finish(end) {

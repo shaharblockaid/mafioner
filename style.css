@@ -133,7 +133,7 @@ h1, h2, h3 { font-family: var(--head); font-weight: 900; line-height: 1.15; }
 .gauge path { fill: none; stroke-width: 24; }
 .g-good { stroke: var(--green); }
 .g-bad { stroke: #f8c4c8; }
-#needle { stroke: var(--ink); stroke-width: 5; stroke-linecap: round; transform-origin: 100px 100px; transform: rotate(-90deg); transition: transform 1.6s cubic-bezier(.2, .9, .3, 1.15); }
+#needle { stroke: var(--ink); stroke-width: 5; stroke-linecap: round; transform-origin: 100px 100px; transform: rotate(-90deg); }
 .gauge circle { fill: var(--ink); }
 .roll .sides { width: min(320px, 100%); }
 .verdict { width: 100%; text-align: right; border: 2px solid; border-radius: 12px; padding: 14px 16px; margin-top: 14px; animation: in .3s ease-out; }
