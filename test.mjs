@@ -42,4 +42,7 @@ assert(Object.keys(ends).length === 4, 'every ending should be reachable');
 // daily: same seed + same choices → same game
 const first = s => 0;
 assert.deepEqual(simulate(42, first), simulate(42, first), 'daily is not deterministic');
+const d = newGame({ name: 'x', female: false, daily: 1 });
+const ev = nextEvent(d);
+assert.notEqual(play(d, ev.options[0]).roll, play(d, ev.options[1]).roll, 'daily: every option shares one roll');
 console.log('ok');

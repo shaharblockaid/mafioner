@@ -50,6 +50,13 @@ export function nextEvent(s) {
   const pool = near.length ? near : open;
   const e = pool[Math.floor(s.rand() * pool.length)];
   s.used.push(e.id);
+  return deal(s, e);
+}
+
+// Each option gets its own roll up front, so in the daily the choice matters
+// and everyone who picks the same option gets the same result.
+function deal(s, e) {
+  s.rolls = new Map(e.options.map(o => [o, s.rand() * 100]));
   return e;
 }
 
@@ -60,7 +67,7 @@ export const chanceOf = (s, o) => (o.chance >= 100 ? 100 : clamp(Math.round(o.ch
 // Doesn't touch stats, so the UI can spin the needle before revealing anything.
 export function play(s, o) {
   const chance = chanceOf(s, o);
-  const roll = s.rand() * 100;
+  const roll = s.rolls.get(o);
   const win = roll >= 100 - chance;
   return { win, roll, chance, fx: (win ? o.win : o.lose) || {}, text: win ? o.winText : o.loseText };
 }
@@ -86,7 +93,7 @@ export function advance(s, e, res) {
     s.pending = years;
     s.heat = 0;
     if (s.cash > 0) s.cash = Math.round(s.cash * 0.7); // confiscation
-    return { jail: JAIL[Math.floor(s.rand() * JAIL.length)], raid };
+    return { jail: deal(s, JAIL[Math.floor(s.rand() * JAIL.length)]), raid };
   }
   const income = INCOME[rankOf(s.respect)] * YEARS_PER_TURN;
   s.cash += income;
